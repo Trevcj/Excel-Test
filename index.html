@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>"Excel Test"</title>
+	<script src="xlsx.full.min.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		var url = "Test.xlsx";
+
+		/* set up async GET request */
+		var req = new XMLHttpRequest();
+		req.open("GET", url, true);
+		req.responseType = "arraybuffer";
+
+		req.onload = function(e) {
+		  var data = new Uint8Array(req.response);
+		  var workbook = XLSX.read(data, {type:"array"});
+
+		  var first_sheet_name = workbook.SheetNames[0];
+		  
+
+		  /* Get worksheet */
+		  var worksheet = workbook.Sheets[first_sheet_name];
+		  console.log(XLSX.utils.sheet_to_json(worksheet));
+		};
+
+		req.send();
+
+
+
+	</script>
+</body>
+</html>
