@@ -2,33 +2,92 @@
 <html>
 <head>
 	<title>"Excel Test"</title>
+	<script src="jquery-3.3.1.min.js"></script>
 	<script src="xlsx.full.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
+
+	<h1>Closing Test</h1>
+	<div id="wrapper">
+		<div id="sheetTabs">
+			
+		</div>
+
+
+		<input type="file" id="input-excel">
+
+		<div id="excelTable">
+			
+		</div>
+
+	
+	</div>
+
+
+
 	<script type="text/javascript">
-		var url = "Closing_checklist.xlsx";
+		$("#input-excel").change(function (e) {
+			var reader = new FileReader();
 
-		/* set up async GET request */
-		var req = new XMLHttpRequest();
-		req.open("GET", url, true);
-		req.responseType = "arraybuffer";
+			reader.readAsArrayBuffer(e.target.files[0]);
 
-		req.onload = function(e) {
-		  var data = new Uint8Array(req.response);
-		  var workbook = XLSX.read(data, {type:"array"});
+			reader.onload = function (e) {
+				var data = new Uint8Array(reader.result);
+				var wb = XLSX.read(data,{type:"array"});
+			
 
-		  var first_sheet_name = workbook.SheetNames[0];
-		  
+			
 
-		  /* Get worksheet */
-		  var worksheet = workbook.Sheets[first_sheet_name];
-		  console.log(XLSX.utils.sheet_to_json(worksheet));
-		};
 
-		req.send();
+			$(function() {   
+
+				for (var i = 0; i < wb.SheetNames.length; ++i) {
+					var sheet = wb.SheetNames[i];
+					$("#sheetTabs").append(`<button id="sheetBtn" value="${sheet}" type="button">${sheet}</button>`);
+				}
+			
+			       $("#sheetTabs").on("click", "#sheetBtn" ,function(){
+			       		
+			       		var thisSheet = $(this).attr("value");
+				       	var htmlstr = XLSX.write(wb,{sheet: thisSheet, type: "binary", bookType:"html"});
+				       	$("#excelTable").html(htmlstr);
+				       	console.log("working");			            
+			       
+					});
+			});
+
+				// var htmlstr = XLSX.write(wb,{sheet:sheetNames[2], type: "binary", bookType:"html"});
+				// console.log(wb);
+
+				// $("#excelTable").html(htmlstr);
+			};
+		});
 
 
 
 	</script>
 </body>
 </html>
+<!-- 
+Yes, the default behavior of the XLSX module is to return a workbook object that has a "Sheets" property.
+
+First let's get the workbook object.
+var workbook = XLSX.readFile('test.xlsx');
+
+Now we can access an object whose properties (keys) are sheet names from the workbook.
+var sheets = workbook.Sheets;
+
+We can also access an array of strings called SheetNames. Each string is the name of the sheet.
+var sheetNames = workbook.SheetNames;
+
+Finally, we can put it all together and access specific spreadsheet from the supplied excel file. For this example I will just access the first sheet.
+var sheetName = workbook.SheetNames[0];
+var sheet = workbook.Sheets[sheetName ];
+
+So if you want to read multiple sheets you can use the list of sheet names (workbook.SheetNames) and the sheets object (workbook.Sheets). I would use a for-loop to go through each sheet name in the SheetNames array, then access the Sheets object by passing in the sheet name to get the sheet.
+for (var i = 0; i < workbook.SheetNames.length; ++i) {
+var sheet = workbook.Sheets[workbook.SheetNames[i]];
+}
+
+Hopefully this helps. You can refer to the documentation as well. -->
