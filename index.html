@@ -34,10 +34,7 @@
 
 			reader.onload = function (e) {
 				var data = new Uint8Array(reader.result);
-				var wb = XLSX.read(data,{type:"array"});
-			
-
-			
+				var wb = XLSX.read(data,{type:"array"});	
 
 
 			$(function() {   
@@ -69,25 +66,3 @@
 	</script>
 </body>
 </html>
-<!-- 
-Yes, the default behavior of the XLSX module is to return a workbook object that has a "Sheets" property.
-
-First let's get the workbook object.
-var workbook = XLSX.readFile('test.xlsx');
-
-Now we can access an object whose properties (keys) are sheet names from the workbook.
-var sheets = workbook.Sheets;
-
-We can also access an array of strings called SheetNames. Each string is the name of the sheet.
-var sheetNames = workbook.SheetNames;
-
-Finally, we can put it all together and access specific spreadsheet from the supplied excel file. For this example I will just access the first sheet.
-var sheetName = workbook.SheetNames[0];
-var sheet = workbook.Sheets[sheetName ];
-
-So if you want to read multiple sheets you can use the list of sheet names (workbook.SheetNames) and the sheets object (workbook.Sheets). I would use a for-loop to go through each sheet name in the SheetNames array, then access the Sheets object by passing in the sheet name to get the sheet.
-for (var i = 0; i < workbook.SheetNames.length; ++i) {
-var sheet = workbook.Sheets[workbook.SheetNames[i]];
-}
-
-Hopefully this helps. You can refer to the documentation as well. -->
